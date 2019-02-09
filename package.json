@@ -26,5 +26,8 @@
   "homepage": "https://github.com/SpaceboyRoss01/harobot#readme",
   "devDependencies": {
     "eslint": "^5.13.0"
+  },
+  "dependencies": {
+    "discord.js": "^11.4.2"
   }
 }
