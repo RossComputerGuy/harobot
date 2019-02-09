@@ -4,7 +4,8 @@
   "description": "Haro Discord Bot for the Mobile Suit Gundam: The Four Wishes Discord Server",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/actions/start.js",
+    "setup": "node src/actions/setup.js",
     "eslint": "eslint *.js",
     "prepublishOnly": "npm run eslint"
   },

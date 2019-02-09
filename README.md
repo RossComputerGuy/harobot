@@ -6,7 +6,16 @@
 
 Haro Discord Bot for the Mobile Suit Gundam: The Four Wishes Discord Server.
 
-# Instaling
+# Installing
+
+## Easy Install
+
+1. Clone this repository.
+2. Run `npm install`.
+3. Run 'npm run setup`.
+4. You're done! You can run the bot via `npm run start`.
+
+## Advance Install
 
 1. Clone this repository.
 2. Copy `config.example.json` to `config.json`.
