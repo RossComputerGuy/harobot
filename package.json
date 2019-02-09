@@ -1,0 +1,30 @@
+{
+  "name": "harobot",
+  "version": "1.0.0",
+  "description": "Haro Discord Bot for the Mobile Suit Gundam: The Four Wishes Discord Server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "eslint": "eslint *.js",
+    "prepublishOnly": "npm run eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SpaceboyRoss01/harobot.git"
+  },
+  "keywords": [
+    "discord",
+    "gundam",
+    "haro",
+    "discord-bot"
+  ],
+  "author": "Spaceboy Ross",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/SpaceboyRoss01/harobot/issues"
+  },
+  "homepage": "https://github.com/SpaceboyRoss01/harobot#readme",
+  "devDependencies": {
+    "eslint": "^5.13.0"
+  }
+}
