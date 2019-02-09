@@ -1,6 +1,6 @@
 # Haro
 
-[![Open Issues](https://badgen.net/github/open-issues/SpaceboyRoss01/harobot<Paste>)](https://github.com/SpaceboyRoss01/harobot/issues)
+[![Open Issues](https://badgen.net/github/open-issues/SpaceboyRoss01/harobot)](https://github.com/SpaceboyRoss01/harobot/issues)
 
 Haro Discord Bot for the Mobile Suit Gundam: The Four Wishes Discord Server.
 
