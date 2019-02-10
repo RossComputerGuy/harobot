@@ -74,6 +74,7 @@ class HaroBot {
     this.destroyed = true;
     this.started = false;
     this[modules].destroy();
+    this.client.destroy();
 
     return true;
   }
