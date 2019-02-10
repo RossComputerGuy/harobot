@@ -8,6 +8,14 @@ const each = (list, method) => Promise.all(list.map(p => {
   }
 })).catch(err => console.warn(err));
 
+module.exports.resolveTreeByKey = (tree, key, defaultValue) => {
+  let result;
+  try {
+    result = key.split(/\./g).reduce((result, key) => result[key], Object.assign({}, tree));
+  } catch (e) { /* noop */ }
+  return typeof result === 'undefined' ? defaultValue : result;
+};
+
 module.exports.moduleHandler = (bot) => {
   let instances = {};
   let modules = [];

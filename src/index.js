@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
-const {moduleHandler} = require('./utils.js');
+const {moduleHandler, resolveTreeByKey} = require('./utils.js');
 
+const config = Symbol('config');
 const commands = Symbol('commands');
 const createGraph = Symbol('createGraph');
 const modules = Symbol('modules');
@@ -27,12 +28,16 @@ const runtimeMethods = {
 
 class HaroBot {
   constructor(config) {
-    this.config = config;
-    this.client = new Discord.Client();
+    this[config] = config;
     this[modules] = moduleHandler(this);
+    this.client = new Discord.Client();
     this.booted = false;
     this.started = false;
     this.destroyed = false;
+  }
+  
+  config(key, defaultValue) {
+    return key ? resolveTreeByKey(this[config], key, defaultValue) : Object.assign({}, this[config]);
   }
   
   instance(name, callback) {
@@ -56,6 +61,7 @@ class HaroBot {
     this.started = false;
     this.destroyed = false;
     this.booted = true;
+    this.client.login(this.config('discord.token'));
     return this[modules].init(false).then(() => this.start());
   }
   
