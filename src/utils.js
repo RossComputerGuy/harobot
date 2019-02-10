@@ -94,8 +94,18 @@ module.exports.moduleHandler = (core) => {
     }
     return instances[name];
   };
+  
+  const getModuleMetadata = (name) => {
+    const found = modules.find(mod => mod.module.metadata().name == name);
+    if (!found) {
+      throw new Error(`Module '${name}' not found`);
+    }
+    return found.module.metadata();
+  };
+  
+  const getModuleNames = () => modules.map(mod => mod.module.metadata().name);
 
-  return {register, init, bind, has, make, destroy};
+  return {register, init, bind, has, make, destroy, getModuleMetadata, getModuleNames};
 };
 
 // vim:set ts=2 sw=2 et:

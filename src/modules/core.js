@@ -23,6 +23,7 @@ class CoreModule extends Module {
       opts = Object.assign({
         type: 'default',
         message: '',
+        description: '',
         color: '#ffffff',
         title: '',
         footer: ''
@@ -32,10 +33,33 @@ class CoreModule extends Module {
         embed.setAuthor(opts.author);
       }
       embed.setColor(this.core.config('embeds.' + opts.type + '.color', opts.color));
-      embed.setDescription(opts.message || opts.description);
+      embed.setDescription(Array.isArray(opts.message || opts.description) ? (opts.message || opts.description).join('\n') : (opts.message || opts.description));
       embed.setFooter(this.core.config('embeds.' + opts.type + '.footer', opts.footer));
       embed.setTitle(this.core.config('embeds.' + opts.type + '.title', opts.title));
+      if (typeof opts.url == 'string') {
+        embed.setURL(opts.url);
+      }
       return embed;
+    });
+  }
+  start() {
+    /* Basic commands */
+    this.core.registerCommand('help', {
+      description: 'Lists the commands',
+      usage: 'help <command>',
+      run: (args, message, channel) => {
+        channel.send(this.core.make('harobot/embed', {
+          title: 'HaroBot Help',
+          footer: `Running HaroBot version ${require('../../package.json').version}`,
+          url: require('../../package.json').homepage,
+          description: Object.keys(this.core.commands).map(commandName => {
+            let cmd = this.core.commands[commandName];
+            return [
+              '* '+commandName+' - '+cmd.description
+            ].join('\n');
+          })
+        }));
+      }
     });
   }
 }

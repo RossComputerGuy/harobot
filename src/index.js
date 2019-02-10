@@ -10,23 +10,25 @@ const createGraph = Symbol('createGraph');
 const modules = Symbol('modules');
 
 const runtimeMethods = {
-  commands: new Map(),
-  registerCommand: (name, opts={}) => new Promise((resolve, reject) => {
-    if (thiscommands.has(name)) {
-      return reject(new Error(`Command ${name} already exists.`));
+  commands: {},
+  registerCommand(name, opts={}) {
+    if (this.commands[name]) {
+      throw new Error(`Command ${name} already exists.`);
     }
     if (typeof opts != 'object') {
-      return reject(new Error('opts is not an object.'));
+      throw new Error('opts is not an object.');
     }
     if (Array.isArray(opts.description) && typeof opts.description != 'string') {
-      return reject(new Error('opts is not an array or string.'));
+      throw new Error('opts.description is not an array or string.');
+    }
+    if (Array.isArray(opts.usage) && typeof opts.usage != 'string') {
+      throw new Error('opts.usage is not an array or string.');
     }
     if (typeof opts.run != 'function') {
-      return reject(new Error('opts.run is not a function.'));
+      throw new Error('opts.run is not a function.');
     }
-    thiscommands.set(name, opts);
-    return resolve();
-  })
+    this.commands[name] = opts;
+  }
 };
 
 class Core extends EventEmitter {
@@ -60,7 +62,7 @@ class Core extends EventEmitter {
     }
     for (const methodName in runtimeMethods) {
       if (typeof runtimeMethods[methodName] === 'function') {
-        runtimeMethods[methodName].bind(this);
+        this[methodName] = runtimeMethods[methodName].bind(this);
       } else {
         this[methodName] = runtimeMethods[methodName];
       }
@@ -73,10 +75,10 @@ class Core extends EventEmitter {
       if (message.content.substring(0, this.config('prefix').length) == this.config('prefix') && !message.author.bot) {
         let args = yargsParser(message.content);
         let name = args['_'].shift().replace(this.config('prefix'), '');
-        if (this.commands.has(name)) {
+        if (this.commands[name]) {
           this.emit('command.run', name, args, message);
           try {
-            this.commands.get(name).run(args, message);
+            this.commands[name].run(args, message, message.channel);
           } catch(ex) {
             this.emit('error', ex);
           }
@@ -125,6 +127,12 @@ class Core extends EventEmitter {
   }
   has(name) {
     return this[modules].has(name);
+  }
+  getModuleMetadata(name) {
+    return this[modules].getModuleMetadata(name);
+  }
+  getModuleNames(name) {
+    return this[modules].getModuleNames(name);
   }
 }
 module.exports = Core;
