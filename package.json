@@ -29,6 +29,7 @@
     "eslint": "^5.13.0"
   },
   "dependencies": {
+    "async-dependency-graph": "^1.1.1",
     "discord.js": "^11.4.2"
   }
 }
