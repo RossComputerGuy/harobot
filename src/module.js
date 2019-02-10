@@ -1,19 +1,17 @@
 class Module {
-  constructor(bot, options={}) {
-    this.bot = bot;
+  constructor(core, options={}) {
+    this.core = core;
     this.options = options;
   }
-  get metadata() {
+  metadata() {
     throw new Error('Metadata not defined.');
   }
   init() {
-    return Promise.reject(new Error('init(): not implemented'));
+    return Promise.resolve();
   }
   start() {
-    return Promise.reject(new Error('start(): not implemented'));
   }
   destroy() {
-    return Promise.reject(new Error('destroy(): not implemented'));
   }
 }
 module.exports = Module;

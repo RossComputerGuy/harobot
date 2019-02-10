@@ -1,15 +1,18 @@
+const merge = require('deepmerge');
 const Discord = require('discord.js');
+const EventEmitter = require('events');
+const omitDeep = require('omit-deep');
 const {moduleHandler, resolveTreeByKey} = require('./utils.js');
+const yargsParser = require('yargs-parser');
 
 const config = Symbol('config');
-const commands = Symbol('commands');
 const createGraph = Symbol('createGraph');
 const modules = Symbol('modules');
 
 const runtimeMethods = {
-  [commands]: new Map(),
+  commands: new Map(),
   registerCommand: (name, opts={}) => new Promise((resolve, reject) => {
-    if (this[commands].has(name)) {
+    if (thiscommands.has(name)) {
       return reject(new Error(`Command ${name} already exists.`));
     }
     if (typeof opts != 'object') {
@@ -21,23 +24,27 @@ const runtimeMethods = {
     if (typeof opts.run != 'function') {
       return reject(new Error('opts.run is not a function.'));
     }
-    this[commands].set(name, opts);
+    thiscommands.set(name, opts);
     return resolve();
   })
 };
 
-class HaroBot {
-  constructor(config) {
-    this[config] = config;
+class Core extends EventEmitter {
+  constructor(config, options={}) {
+    super();
+    const merger = merge.default ? merge.default : merge;
+    const omitted = omitDeep(require('./config.defaults.json'), options.omit || []);
+    this.configuration = merger(omitted, config);
     this[modules] = moduleHandler(this);
     this.client = new Discord.Client();
     this.booted = false;
     this.started = false;
     this.destroyed = false;
+    // TODO: use winston to log events.
   }
   
   config(key, defaultValue) {
-    return key ? resolveTreeByKey(this[config], key, defaultValue) : Object.assign({}, this[config]);
+    return key ? resolveTreeByKey(this.configuration, key, defaultValue) : Object.assign({}, this.configuration);
   }
   
   instance(name, callback) {
@@ -61,8 +68,30 @@ class HaroBot {
     this.started = false;
     this.destroyed = false;
     this.booted = true;
-    this.client.login(this.config('discord.token'));
-    return this[modules].init(false).then(() => this.start());
+    this.client.on('message', message => {
+      this.emit('message', message);
+      if (message.content.substring(0, this.config('prefix').length) == this.config('prefix') && !message.author.bot) {
+        let args = yargsParser(message.content);
+        let name = args['_'].shift().replace(this.config('prefix'), '');
+        if (this.commands.has(name)) {
+          this.emit('command.run', name, args, message);
+          try {
+            this.commands.get(name).run(args, message);
+          } catch(ex) {
+            this.emit('error', ex);
+          }
+        } else {
+          this.emit('command.notHas', name, args, message);
+          if (this.has('harobot/embed')) {
+            message.channel.send(this.make('harobot/embed', {
+              type: 'error',
+              message: `Command '${name}' not found`
+            }));
+          }
+        }
+      }
+    });
+    return this.client.login(this.config('discord.token')).then(() => this[modules].init(true).then(() => this.start()));
   }
   
   destroy() {
@@ -98,6 +127,6 @@ class HaroBot {
     return this[modules].has(name);
   }
 }
-module.exports = HaroBot;
+module.exports = Core;
 
 // vim:set ts=2 sw=2 et:

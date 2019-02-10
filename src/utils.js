@@ -16,7 +16,7 @@ module.exports.resolveTreeByKey = (tree, key, defaultValue) => {
   return typeof result === 'undefined' ? defaultValue : result;
 };
 
-module.exports.moduleHandler = (bot) => {
+module.exports.moduleHandler = (core) => {
   let instances = {};
   let modules = [];
   let registry = [];
@@ -35,8 +35,8 @@ module.exports.moduleHandler = (bot) => {
       }));
     });
     list.forEach((p, i) => {
-      if (p.metadata().depends instanceof Array) {
-        const dindex = dependsOnIndex(p.metadata().depends);
+      if (p.module.metadata().depends instanceof Array) {
+        const dindex = dependsOnIndex(p.module.metadata().depends);
         if (dindex !== -1) {
           graph.addDependency(String(i), String(dindex));
         }

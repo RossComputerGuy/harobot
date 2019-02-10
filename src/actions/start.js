@@ -1,9 +1,13 @@
 const config = require('../../config.json');
-const HaroBot = require('../');
+const Core = require('../');
 
-const bot = new HaroBot(config);
+/* Module imports */
+const {CoreModule} = require('../modules/core.js');
 
-// TODO: register modules
+/* Creation of the bot */
+const bot = new Core(config);
+
+bot.register(CoreModule, { before: true });
 
 bot.boot();
 
