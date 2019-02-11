@@ -29,6 +29,7 @@
     "eslint": "^5.13.0"
   },
   "dependencies": {
+    "discord.js": "^11.4.2",
     "slimcord.js": "^1.0.0"
   }
 }
