@@ -2,10 +2,10 @@
   "name": "harobot",
   "version": "1.0.0",
   "description": "Haro Discord Bot for the Mobile Suit Gundam: The Four Wishes Discord Server",
-  "main": "index.js",
+  "main": "actions/start.js",
   "scripts": {
-    "start": "node src/actions/start.js",
-    "setup": "node src/actions/setup.js",
+    "start": "node actions/start.js",
+    "setup": "node actions/setup.js",
     "eslint": "eslint **/**.js",
     "prepublishOnly": "npm run eslint"
   },
@@ -29,5 +29,6 @@
     "eslint": "^5.13.0"
   },
   "dependencies": {
+    "slimcord.js": "^1.0.0"
   }
 }
