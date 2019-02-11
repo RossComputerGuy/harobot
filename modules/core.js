@@ -1,9 +1,9 @@
 const Discord = require('discord.js');
-const Module = require('../module.js');
 
-class CoreModule extends Module {
+class CoreModule {
   constructor(core, options) {
-    super(core, options);
+    this.core = core;
+    this.options = options;
   }
   metadata() {
     return {
@@ -61,6 +61,9 @@ class CoreModule extends Module {
         }));
       }
     });
+  }
+  destroy() {
+    delete this.core.commands['help'];
   }
 }
 module.exports = {CoreModule};

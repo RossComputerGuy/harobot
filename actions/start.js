@@ -1,5 +1,5 @@
-const config = require('../../config.json');
-const Core = require('../');
+const config = require('../config.json');
+const Core = require('slimcord.js');
 
 /* Module imports */
 const {CoreModule} = require('../modules/core.js');
